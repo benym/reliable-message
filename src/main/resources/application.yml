@@ -1,0 +1,51 @@
+
+spring:
+  application:
+    name: reliableMessage
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://162.14.74.94:13306/reliableMessage?characterEncoding=utf8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: ming~!@@!~3306
+  kafka:
+    bootstrap-servers: 162.14.74.94:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 3
+    consumer:
+      group-id: message-test
+      enable-auto-commit: true
+      auto-commit-interval: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+logging:
+  level:
+    org:
+      springframework:
+        kafka: ERROR # spring-kafka
+      apache:
+        kafka: ERROR # kafka
+
+server:
+  servlet:
+    context-path: /reliableMessage
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # 全局删除字段名
+      logic-delete-field: deleted
+      # 逻辑已删除值
+      logic-delete-value: 1
+      # 逻辑未删除值
+      logic-not-delete-value: 0
+
+message:
+  topic: test_message
