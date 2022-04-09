@@ -5,6 +5,9 @@
 - 定时任务补偿
 - 消息幂等
 - 死信队列
+- 抽象化Handler
+- 抽象化ApplicationEvent
+- 抽象化Listener
 ### 核心链路图
 ![](img/核心链路.png)
 
