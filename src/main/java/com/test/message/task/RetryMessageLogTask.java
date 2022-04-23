@@ -67,6 +67,7 @@ public class RetryMessageLogTask {
         }
     }
 
+
     public List<String> generalData(Integer num) {
         List<String> data = new ArrayList<>();
         for (int i = 0; i < num; i++) {
