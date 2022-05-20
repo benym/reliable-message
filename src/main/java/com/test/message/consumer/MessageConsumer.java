@@ -33,8 +33,8 @@ public class MessageConsumer {
      *
      * @param consumerRecord consumerRecord
      */
-    @KafkaListener(topics = "test_message")
-    public void consumerMessage(ConsumerRecord<String, String> consumerRecord)
+    @KafkaListener(topics = "test_message",containerFactory = "containerFactory")
+    public void consumerMessage(ConsumerRecord<String, String> consumerRecord,Acknowledgment acknowledgment)
             throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<MessageSuccessDTO> messageSuccessDTOList = objectMapper
@@ -50,6 +50,7 @@ public class MessageConsumer {
                 }).collect(Collectors.toList());
         try {
             messageSuccessService.saveOrUpdateBatch(messageSuccessDOList);
+            acknowledgment.acknowledge();
         } catch (DuplicateKeyException e) {
             log.warn("触发消费者唯一索引，防止重复消费：{}", e.getMessage());
         }
@@ -69,7 +70,9 @@ public class MessageConsumer {
             @Header(KafkaHeaders.DLT_EXCEPTION_MESSAGE) String exception,
             @Header(KafkaHeaders.DLT_EXCEPTION_STACKTRACE) String stacktrace) {
         log.info("收到死信队列消息：{},异常信息{},堆栈信息{}", record.value(), exception, stacktrace);
-        // 手动提交offset
+        // 手动提交offset，需要同时配置listener:ack-mode，或在kafkaConfig中修改
+        // 死信队列收到后最好ack一次，因为如果不ack，那么死信队列会认为自己的消息滞后，重新消费死信队列消息
+        // 此处应该配合告警，可靠性需要和上方的队列一样做保证
         acknowledgment.acknowledge();
     }
 }
