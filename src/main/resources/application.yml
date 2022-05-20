@@ -28,6 +28,12 @@ spring:
     # 手动ack支持
     listener:
       ack-mode: manual
+    properties:
+      # 最大拉取间隔，默认5分钟
+      max:
+        poll:
+          interval:
+            ms: 500000
 
 logging:
   level:
