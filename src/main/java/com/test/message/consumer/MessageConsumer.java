@@ -53,12 +53,15 @@ public class MessageConsumer {
             acknowledgment.acknowledge();
         } catch (DuplicateKeyException e) {
             log.warn("触发消费者唯一索引，防止重复消费：{}", e.getMessage());
+        } catch (Exception e) {
+            log.error("未知错误：{}",e.getMessage());
+            throw new RuntimeException("抛出异常交给死信队列");
         }
         log.info("消息消费成功");
     }
 
     /**
-     * 死信队列处理
+     * 死信队列处理，当消费者异常次数达到阈值时，将消息抛入死信队列
      *
      * @param record 消息
      * @param acknowledgment 手动提交offset
@@ -73,6 +76,9 @@ public class MessageConsumer {
         // 手动提交offset，需要同时配置listener:ack-mode，或在kafkaConfig中修改
         // 死信队列收到后最好ack一次，因为如果不ack，那么死信队列会认为自己的消息滞后，重新消费死信队列消息
         // 此处应该配合告警，可靠性需要和上方的队列一样做保证
+
+        // 此处的ack实现不仅ack了死信队列，同时也将异常的consumer的topic落后的offset给ack了，因为只有这样，失败的消息才会被跳过继续往下执行
+        // 如果ack实现的时候只ack死信，不ack异常的队列，那么会造成消息一直堆积，无法越过异常消息
         acknowledgment.acknowledge();
     }
 }
