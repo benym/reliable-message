@@ -86,6 +86,9 @@ public class MessageConsumer {
         
         // 解决方案：这里最好是当consumer异常了直接抛入一个分布式延迟队列，或者重试主题，重试主题再做延时，依靠分布式延迟队列进行重新投递
         // 在分布式延迟队列中做好消息重新投递的记录，达到次数之后再丢入死信队列
+
+        // 重试主题需要确定是可恢复错误，还是不可恢复错误，做分类处理
+        // 更多重试主题技巧可见https://www.infoq.cn/article/51XSHW2opSmakhHmtth8
         acknowledgment.acknowledge();
     }
 }
