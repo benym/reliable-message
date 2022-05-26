@@ -14,6 +14,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       acks: all
+      # 对于能被RetriableException捕获的属于可重试异常，则会进行重试，如果不是可重试的消息，则抛出错误信息
       retries: 3
     consumer:
       group-id: message-test
