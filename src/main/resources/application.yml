@@ -28,7 +28,12 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     # 手动ack支持
     listener:
+      # 手动提交
       ack-mode: manual
+      # SINGLE或BATCH
+      type: SINGLE
+      # 如果当前消费者拉取到了空数据，则等待100ms再去拉取
+      pollTimeout: 100
     properties:
       # 最大拉取间隔，默认5分钟
       max:
