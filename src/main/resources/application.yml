@@ -32,6 +32,12 @@ spring:
       ack-mode: manual
       # SINGLE或BATCH
       type: SINGLE
+      # 设置并发数 并发消费
+      # 比如会启动3条线程进行监听，而要监听的topic有5个partition，意味着将有2条线程都是分配到2个partition，还有1条线程分配到1个partition。
+      # 注意：并发量根据实际分区数决定，必须小于等于分区数，否则会有线程一直处于空闲状态。
+      # 如果并行度设置不正确，将会导致Kafka服务重复rebalance
+      # concurrency*server=partition
+      concurrency: 3
       # 如果当前消费者拉取到了空数据，则等待100ms再去拉取
       pollTimeout: 100
     properties:
