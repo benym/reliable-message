@@ -36,6 +36,10 @@ public class MessageConsumer {
     @KafkaListener(topics = "test_message",containerFactory = "containerFactory")
     public void consumerMessage(ConsumerRecord<String, String> consumerRecord,Acknowledgment acknowledgment)
             throws JsonProcessingException {
+        // 如果在这个过程中没有死信队列和重试机制，那么假设前面有一条消息是异常的
+        // 这次异常的offset，假设为1，loe预期为2，由于异常，本次手动ack并不会提交
+        // 如果此时有新消息进来，消费成功，则当前ack提交前，offset为1，loe预期为3
+        // 此时消费成功ack后，offset更新为3，在没有死信队列机制的情况下，造成上一次异常消息的不会再被消费，消息丢失
         ObjectMapper objectMapper = new ObjectMapper();
         List<MessageSuccessDTO> messageSuccessDTOList = objectMapper
                 .readValue(consumerRecord.value(), new TypeReference<List<MessageSuccessDTO>>() {
