@@ -8,6 +8,7 @@
 - 抽象化Handler
 - 抽象化ApplicationEvent
 - 抽象化Listener
+### 注意：超高可靠性和超高性能需要有取舍，做到超高可靠性一定会有性能损失
 ### 核心链路图
 ![](img/核心链路.png)
 
