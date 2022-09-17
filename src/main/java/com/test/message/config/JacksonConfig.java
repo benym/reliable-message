@@ -42,29 +42,25 @@ public class JacksonConfig {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer defaultJackson2ObjectMapperBuilderCustomizer() {
-        return builder -> {
-            builder.timeZone(TimeZone.getDefault())
-                    .dateFormat(new SimpleDateFormat(DEFAULT_DATETIME_PATTERN))
-                    .serializerByType(LocalDateTime.class,
-                            new LocalDateTimeSerializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)))
-                    .deserializerByType(LocalDateTime.class,
-                            new LocalDateTimeDeserializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)))
-                    .serializerByType(LocalDate.class,
-                            new LocalDateSerializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)))
-                    .deserializerByType(LocalDate.class,
-                            new LocalDateDeserializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)))
-                    .serializerByType(LocalTime.class,
-                            new LocalTimeSerializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)))
-                    .deserializerByType(LocalTime.class,
-                            new LocalTimeDeserializer(
-                                    DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)))
-                    .serializerByType(Long.class, ToStringSerializer.instance)
-                    .serializerByType(Long.TYPE, ToStringSerializer.instance);
-        };
+        return builder -> builder.timeZone(TimeZone.getDefault())
+                .dateFormat(new SimpleDateFormat(DEFAULT_DATETIME_PATTERN))
+                .serializerByType(LocalDateTime.class,
+                        new LocalDateTimeSerializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)))
+                .deserializerByType(LocalDateTime.class,
+                        new LocalDateTimeDeserializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_DATETIME_PATTERN)))
+                .serializerByType(LocalDate.class,
+                        new LocalDateSerializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)))
+                .deserializerByType(LocalDate.class,
+                        new LocalDateDeserializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_DATE_PATTERN)))
+                .serializerByType(LocalTime.class,
+                        new LocalTimeSerializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)))
+                .deserializerByType(LocalTime.class,
+                        new LocalTimeDeserializer(
+                                DateTimeFormatter.ofPattern(DEFAULT_TIME_PATTERN)));
     }
 }
