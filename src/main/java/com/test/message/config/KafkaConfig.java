@@ -22,14 +22,14 @@ public class KafkaConfig {
 
 
     @Autowired
-    private ConsumerFactory consumerFactory;
+    private ConsumerFactory<Object, Object> consumerFactory;
 
     @Autowired
     private KafkaTemplate kafkaTemplate;
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory containerFactory() {
-        ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
+    public ConcurrentKafkaListenerContainerFactory<?, ?> containerFactory() {
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         // 如果consumer有ack入参，则这句话是必须的
         factory.getContainerProperties().setAckMode(AckMode.MANUAL);
