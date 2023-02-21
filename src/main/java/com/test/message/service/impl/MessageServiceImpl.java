@@ -35,6 +35,9 @@ public class MessageServiceImpl implements MessageService {
     private MessageLogServiceImpl messageLogService;
 
     @Autowired
+    private MessageService messageService;
+
+    @Autowired
     private MessageEntityService messageEntityService;
 
     @Autowired
@@ -101,6 +104,57 @@ public class MessageServiceImpl implements MessageService {
             }
         });
         return 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void testTransaction() {
+        messageService.test1();
+        messageService.test2();
+        messageService.test3();
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void test1(){
+        MessageEntityDO messageEntityDO = new MessageEntityDO();
+        messageEntityDO.setNoticeContent("123131");
+        messageEntityDO.setNoticeType((byte) 1);
+        messageEntityService.save(messageEntityDO);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void test2(){
+        MessageLogDO messageLogDO = new MessageLogDO();
+        messageLogDO.setNoticeUserId("123456");
+        messageLogDO.setNoticeType(NoticeType.GLOBAL.getCode());
+        messageLogDO.setMessageAction(MessageActionType.INSERT.getNoticeTypeCode());
+        // prepared状态
+        messageLogDO.setStatus(MessageStatus.PREPARED.getCode());
+        messageLogDO.setCreatedBy("测试");
+        messageLogDO.setUpdatedBy("测试");
+        messageLogService.save(messageLogDO);
+    }
+
+
+    public void test3(){
+        MessageLogDO messageLogDO = new MessageLogDO();
+        messageLogDO.setNoticeUserId("9879789");
+        messageLogDO.setNoticeType(NoticeType.GLOBAL.getCode());
+        messageLogDO.setMessageAction(MessageActionType.INSERT.getNoticeTypeCode());
+        // prepared状态
+        messageLogDO.setStatus(MessageStatus.PREPARED.getCode());
+        messageLogDO.setCreatedBy("测试22");
+        messageLogDO.setUpdatedBy("测试22");
+        messageLogService.save(messageLogDO);
+        try {
+            int i = 1/0;
+        } catch (Exception e) {
+            QueryWrapper<MessageLogDO> queryWrapper = new QueryWrapper<>();
+            queryWrapper.lambda().eq(MessageLogDO::getNoticeUserId,"9879789");
+            messageLogService.remove(queryWrapper);
+            throw new RuntimeException("123123");
+        }
+
     }
 
     public List<String> generalData(Integer num) {

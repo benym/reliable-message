@@ -9,4 +9,15 @@ public interface MessageService {
      * @return Integer
      */
     Integer sendToUser();
+
+    /**
+     * 测试事务回滚
+     */
+    void testTransaction();
+
+    void test1();
+
+    void test2();
+
+    void test3();
 }
